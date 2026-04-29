@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VehiclePoolCpstl</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .admin-login {
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+        
+        .admin-login .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .editable {
+            cursor: text;
+        }
+        
+        .editable:focus {
+            outline: 2px solid var(--secondary);
+            background-color: #f8f9fa;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .invoice-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .invoice-content {
+            background-color: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 800px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .invoice-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .invoice-details {
+            margin-bottom: 2rem;
+        }
+        
+        .invoice-details table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        
+        .invoice-total {
+            text-align: right;
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .invoice-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-modal:hover {
+            color: var(--danger);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px 10px;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                VehiclePoolCpstl
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" onclick="showPage('request-form')"><i class="fas fa-file-alt"></i> Request Form</a></li>
+                    <li><a href="#" onclick="showPage('admin-login')"><i class="fas fa-user-shield"></i> Admin Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="card">
+                <h2>Welcome to VehiclePoolCpstl</h2>
+                <p>VehiclePoolCpstl is a comprehensive system for managing company vehicle requests. Employees can easily submit vehicle requests, while administrators can track, manage, and generate invoices for all vehicle usage.</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>How It Works</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-file-alt" style="font-size: 2rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                            <h4>Submit Request</h4>
+                            <p>Fill out the vehicle request form with your travel details.</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-tasks" style="font-size: 2rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                            <h4>Admin Review</h4>
+                            <p>Administrators review and process your request.</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <i class="fas fa-receipt" style="font-size: 2rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                            <h4>Invoice Generation</h4>
+                            <p>After completion, an invoice is generated based on usage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request Form Page -->
+        <div id="request-form" class="page">
+            <div class="card">
+                <h2>Vehicle Request Form</h2>
+                <div id="form-alert"></div>
+                <form id="vehicle-request-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="epfNumber">EPF Number</label>
+                        <input type="text" id="epfNumber" name="epfNumber" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="function">Function / Purpose of Travel</label>
+                        <input type="text" id="function" name="function" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="requestDescription">Request Description</label>
+                        <textarea id="requestDescription" name="requestDescription" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="destination">Destination</label>
+                        <input type="text" id="destination" name="destination" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="numberOfPersons">Number of Persons for the Journey</label>
+                        <input type="number" id="numberOfPersons" name="numberOfPersons" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateTime">Date and Time of Travel</label>
+                        <input type="datetime-local" id="dateTime" name="dateTime" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Request</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Login Page -->
+        <div id="admin-login" class="page">
+            <div class="card admin-login">
+                <h2>Admin Login</h2>
+                <div id="login-alert"></div>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard Page -->
+        <div id="admin-dashboard" class="page">
+            <div class="card">
+                <div class="admin-header">
+                    <div>
+                        <h2>Admin Dashboard</h2>
+                        <p>Manage all vehicle requests here</p>
+                    </div>
+                    <div class="admin-profile">
+                        <img src="https://picsum.photos/seed/admin123/50/50.jpg" alt="Admin" class="admin-avatar">
+                        <div>
+                            <strong>Admin User</strong>
+                            <p style="margin: 0; font-size: 0.8rem;">VehiclePool Administrator</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="requests-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>EPF Number</th>
+                                <th>Function</th>
+                                <th>Request</th>
+                                <th>Destination</th>
+                                <th>Persons</th>
+                                <th>Date & Time</th>
+                                <th>Driver Name</th>
+                                <th>Driver EPF</th>
+                                <th>Porter Name</th>
+                                <th>Vehicle Number</th>
+                                <th>Start Meter</th>
+                                <th>Ending Meter</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="invoice-modal">
+        <div class="invoice-content">
+            <button class="close-modal" onclick="closeInvoiceModal()">&times;</button>
+            <div class="invoice-header">
+                <div>
+                    <h2 class="invoice-title">VehiclePoolCpstl</h2>
+                    <p>Company Vehicle Usage Invoice</p>
+                </div>
+                <div>
+                    <p><strong>Invoice #:</strong> <span id="invoice-number"></span></p>
+                    <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+                </div>
+            </div>
+            
+            <div class="invoice-details">
+                <h3>Employee Information</h3>
+                <table>
+                    <tr>
+                        <td><strong>Employee Name:</strong></td>
+                        <td id="invoice-emp-name"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>EPF Number:</strong></td>
+                        <td id="invoice-emp-epf"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Function/Purpose:</strong></td>
+                        <td id="invoice-function"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Destination:</strong></td>
+                        <td id="invoice-destination"></td>
+                    </tr>
+                </table>
+                
+                <h3>Vehicle & Driver Information</h3>
+                <table>
+                    <tr>
+                        <td><strong>Driver Name:</strong></td>
+                        <td id="invoice-driver-name"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Driver EPF Number:</strong></td>
+                        <td id="invoice-driver-epf"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Porter Name:</strong></td>
+                        <td id="invoice-porter-name"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vehicle Number:</strong></td>
+                        <td id="invoice-vehicle-number"></td>
+                    </tr>
+                </table>
+                
+                <h3>Journey Details</h3>
+                <table>
+                    <tr>
+                        <td><strong>Start Meter Reading:</strong></td>
+                        <td id="invoice-start-meter"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ending Meter Reading:</strong></td>
+                        <td id="invoice-ending-meter"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Distance Traveled:</strong></td>
+                        <td id="invoice-distance"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rate per km:</strong></td>
+                        <td>Rs. 80</td>
+                    </tr>
+                </table>
+                
+                <div class="invoice-total">
+                    Total Cost: Rs. <span id="invoice-total-cost"></span>
+                </div>
+            </div>
+            
+            <div class="invoice-actions">
+                <button class="btn" onclick="printInvoice()">Print Invoice</button>
+                <button class="btn btn-success" onclick="closeInvoiceModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                showPage('admin-dashboard');
+                loadRequests();
+            }
+            
+            // Setup form submission
+            document.getElementById('vehicle-request-form').addEventListener('submit', submitRequest);
+            document.getElementById('admin-login-form').addEventListener('submit', adminLogin);
+            
+            // Format date for display
+            const now = new Date();
+            document.getElementById('invoice-date').textContent = now.toLocaleDateString();
+        });
+        
+        // Show specific page
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Load admin dashboard data if needed
+            if (pageId === 'admin-dashboard' && sessionStorage.getItem('adminLoggedIn') === 'true') {
+                loadRequests();
+            }
+            
+            // Prevent default link behavior
+            return false;
+        }
+        
+        // Submit vehicle request
+        function submitRequest(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                epfNumber: document.getElementById('epfNumber').value,
+                function: document.getElementById('function').value,
+                requestDescription: document.getElementById('requestDescription').value,
+                destination: document.getElementById('destination').value,
+                numberOfPersons: document.getElementById('numberOfPersons').value,
+                dateTime: document.getElementById('dateTime').value,
+                driverName: '',
+                driverEpf: '',
+                porterName: '',
+                vehicleNumber: '',
+                startMeter: '',
+                endingMeter: ''
+            };
+            
+            // Get existing requests or initialize empty array
+            let requests = JSON.parse(localStorage.getItem('vehicleRequests')) || [];
+            
+            // Add new request
+            requests.push(formData);
+            
+            // Save to localStorage
+            localStorage.setItem('vehicleRequests', JSON.stringify(requests));
+            
+            // Show success message
+            const formAlert = document.getElementById('form-alert');
+            formAlert.innerHTML = `
+                <div class="alert alert-success">
+                    Your vehicle request has been submitted successfully!
+                </div>
+            `;
+            
+            // Reset form
+            document.getElementById('vehicle-request-form').reset();
+            
+            // Clear alert after 5 seconds
+            setTimeout(() => {
+                formAlert.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Admin login
+        function adminLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Check credentials
+            if (username === 'Cpstl123' && password === '@Cpstlcar2026') {
+                // Set login status
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                
+                // Show dashboard
+                showPage('admin-dashboard');
+                loadRequests();
+                
+                // Clear login form
+                document.getElementById('admin-login-form').reset();
+            } else {
+                // Show error message
+                const loginAlert = document.getElementById('login-alert');
+                loginAlert.innerHTML = `
+                    <div class="alert alert-danger">
+                        Invalid username or password. Please try again.
+                    </div>
+                `;
+                
+                // Clear alert after 5 seconds
+                setTimeout(() => {
+                    loginAlert.innerHTML = '';
+                }, 5000);
+            }
+        }
+        
+        // Load requests for admin dashboard
+        function loadRequests() {
+            const requests = JSON.parse(localStorage.getItem('vehicleRequests')) || [];
+            const tableBody = document.querySelector('#requests-table tbody');
+            
+            // Clear table
+            tableBody.innerHTML = '';
+            
+            // Add each request to the table
+            requests.forEach((request, index) => {
+                const row = document.createElement('tr');
+                
+                // Format date for display
+                const dateObj = new Date(request.dateTime);
+                const formattedDate = dateObj.toLocaleString();
+                
+                row.innerHTML = `
+                    <td class="editable" contenteditable="true" data-field="fullName" data-index="${index}">${request.fullName}</td>
+                    <td class="editable" contenteditable="true" data-field="epfNumber" data-index="${index}">${request.epfNumber}</td>
+                    <td class="editable" contenteditable="true" data-field="function" data-index="${index}">${request.function}</td>
+                    <td class="editable" contenteditable="true" data-field="requestDescription" data-index="${index}">${request.requestDescription}</td>
+                    <td class="editable" contenteditable="true" data-field="destination" data-index="${index}">${request.destination}</td>
+                    <td class="editable" contenteditable="true" data-field="numberOfPersons" data-index="${index}">${request.numberOfPersons}</td>
+                    <td>${formattedDate}</td>
+                    <td class="editable" contenteditable="true" data-field="driverName" data-index="${index}">${request.driverName}</td>
+                    <td class="editable" contenteditable="true" data-field="driverEpf" data-index="${index}">${request.driverEpf}</td>
+                    <td class="editable" contenteditable="true" data-field="porterName" data-index="${index}">${request.porterName}</td>
+                    <td class="editable" contenteditable="true" data-field="vehicleNumber" data-index="${index}">${request.vehicleNumber}</td>
+                    <td class="editable" contenteditable="true" data-field="startMeter" data-index="${index}">${request.startMeter}</td>
+                    <td class="editable" contenteditable="true" data-field="endingMeter" data-index="${index}">${request.endingMeter}</td>
+                    <td>
+                        <button class="btn btn-success" onclick="generateInvoice(${index})" style="padding: 0.5rem; margin-right: 0.5rem;">Invoice</button>
+                        <button class="btn btn-danger" onclick="deleteRequest(${index})" style="padding: 0.5rem;">Delete</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners for editable cells
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('blur', updateRequest);
+            });
+        }
+        
+        // Update request when editable cell is changed
+        function updateRequest(e) {
+            const field = e.target.dataset.field;
+            const index = parseInt(e.target.dataset.index);
+            const newValue = e.target.textContent;
+            
+            // Get existing requests
+            let requests = JSON.parse(localStorage.getItem('vehicleRequests')) || [];
+            
+            // Update the specific field
+            if (requests[index]) {
+                requests[index][field] = newValue;
+                
+                // Save to localStorage
+                localStorage.setItem('vehicleRequests', JSON.stringify(requests));
+            }
+        }
+        
+        // Delete a request
+        function deleteRequest(index) {
+            if (confirm('Are you sure you want to delete this request?')) {
+                // Get existing requests
+                let requests = JSON.parse(localStorage.getItem('vehicleRequests')) || [];
+                
+                // Remove the request at the specified index
+                requests.splice(index, 1);
+                
+                // Save to localStorage
+                localStorage.setItem('vehicleRequests', JSON.stringify(requests));
+                
+                // Reload the table
+                loadRequests();
+            }
+        }
+        
+        // Generate invoice for a request
+        function generateInvoice(index) {
+            // Get existing requests
+            const requests = JSON.parse(localStorage.getItem('vehicleRequests')) || [];
+            const request = requests[index];
+            
+            if (!request) {
+                alert('Request not found!');
+                return;
+            }
+            
+            // Check if required fields are filled
+            if (!request.driverName || !request.vehicleNumber || !request.startMeter || !request.endingMeter) {
+                alert('Please fill in all required fields (Driver Name, Vehicle Number, Start Meter, Ending Meter) before generating an invoice.');
+                return;
+            }
+            
+            // Calculate distance and cost
+            const startMeter = parseFloat(request.startMeter);
+            const endingMeter = parseFloat(request.endingMeter);
+            const distance = endingMeter - startMeter;
+            const totalCost = distance * 80;
+            
+            // Populate invoice modal
+            document.getElementById('invoice-number').textContent = 'INV-' + (index + 1).toString().padStart(4, '0');
+            document.getElementById('invoice-emp-name').textContent = request.fullName;
+            document.getElementById('invoice-emp-epf').textContent = request.epfNumber;
+            document.getElementById('invoice-function').textContent = request.function;
+            document.getElementById('invoice-destination').textContent = request.destination;
+            document.getElementById('invoice-driver-name').textContent = request.driverName;
+            document.getElementById('invoice-driver-epf').textContent = request.driverEpf;
+            document.getElementById('invoice-porter-name').textContent = request.porterName;
+            document.getElementById('invoice-vehicle-number').textContent = request.vehicleNumber;
+            document.getElementById('invoice-start-meter').textContent = startMeter + ' km';
+            document.getElementById('invoice-ending-meter').textContent = endingMeter + ' km';
+            document.getElementById('invoice-distance').textContent = distance + ' km';
+            document.getElementById('invoice-total-cost').textContent = totalCost.toFixed(2);
+            
+            // Show invoice modal
+            document.getElementById('invoice-modal').style.display = 'block';
+        }
+        
+        // Close invoice modal
+        function closeInvoiceModal() {
+            document.getElementById('invoice-modal').style.display = 'none';
+        }
+        
+        // Print invoice
+        function printInvoice() {
+            const invoiceContent = document.querySelector('.invoice-content').innerHTML;
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>VehiclePoolCpstl Invoice</title>
+                    <style>
+                        body {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            padding: 20px;
+                            color: #333;
+                        }
+                        .invoice-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 2rem;
+                            padding-bottom: 1rem;
+                            border-bottom: 2px solid #3498db;
+                        }
+                        .invoice-title {
+                            color: #2c3e50;
+                            font-size: 1.5rem;
+                        }
+                        .invoice-details table {
+                            width: 100%;
+                            margin-bottom: 1.5rem;
+                            border-collapse: collapse;
+                        }
+                        .invoice-details td {
+                            padding: 0.5rem 0;
+                        }
+                        h3 {
+                            color: #2c3e50;
+                            margin-top: 1.5rem;
+                            margin-bottom: 0.5rem;
+                        }
+                        .invoice-total {
+                            text-align: right;
+                            margin-top: 1rem;
+                            font-weight: bold;
+                            font-size: 1.2rem;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${invoiceContent}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // Print after a short delay to ensure content is loaded
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('invoice-modal');
+            if (e.target === modal) {
+                closeInvoiceModal();
+            }
+        });
+    </script>
+</body>
+</html>
